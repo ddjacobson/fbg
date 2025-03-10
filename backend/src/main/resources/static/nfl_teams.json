@@ -1,0 +1,37 @@
+{
+    "teams": [
+      { "city": "Arizona", "name": "Cardinals", "conf": "NFC", "division": "West", "previousYearRank": 3 },
+      { "city": "Atlanta", "name": "Falcons", "conf": "NFC", "division": "South", "previousYearRank": 2  },
+      { "city": "Baltimore", "name": "Ravens", "conf": "AFC", "division": "North", "previousYearRank": 1  },
+      { "city": "Buffalo", "name": "Bills", "conf": "AFC", "division": "East", "previousYearRank": 1  },
+      { "city": "Carolina", "name": "Panthers", "conf": "NFC", "division": "South", "previousYearRank": 3  },
+      { "city": "Chicago", "name": "Bears", "conf": "NFC", "division": "North", "previousYearRank": 4  },
+      { "city": "Cincinnati", "name": "Bengals", "conf": "AFC", "division": "North", "previousYearRank": 3  },
+      { "city": "Cleveland", "name": "Browns", "conf": "AFC", "division": "North", "previousYearRank": 4  },
+      { "city": "Dallas", "name": "Cowboys", "conf": "NFC", "division": "East", "previousYearRank": 3  },
+      { "city": "Denver", "name": "Broncos", "conf": "AFC", "division": "West", "previousYearRank": 3  },
+      { "city": "Detroit", "name": "Lions", "conf": "NFC", "division": "North", "previousYearRank": 1  },
+      { "city": "Green Bay", "name": "Packers", "conf": "NFC", "division": "North", "previousYearRank": 3  },
+      { "city": "Houston", "name": "Texans", "conf": "AFC", "division": "South", "previousYearRank": 1  },
+      { "city": "Indianapolis", "name": "Colts", "conf": "AFC", "division": "South", "previousYearRank": 2  },
+      { "city": "Jacksonville", "name": "Jaguars", "conf": "AFC", "division": "South", "previousYearRank": 3  },
+      { "city": "Kansas City", "name": "Chiefs", "conf": "AFC", "division": "West", "previousYearRank": 1  },
+      { "city": "Las Vegas", "name": "Raiders", "conf": "AFC", "division": "West", "previousYearRank": 4  },
+      { "city": "Los Angeles", "name": "Chargers", "conf": "AFC", "division": "West", "previousYearRank": 2  },
+      { "city": "Los Angeles", "name": "Rams", "conf": "NFC", "division": "West", "previousYearRank": 1  },
+      { "city": "Miami", "name": "Dolphins", "conf": "AFC", "division": "East", "previousYearRank": 2  },
+      { "city": "Minnesota", "name": "Vikings", "conf": "NFC", "division": "North", "previousYearRank": 2  },
+      { "city": "New England", "name": "Patriots", "conf": "AFC", "division": "East", "previousYearRank": 4  },
+      { "city": "New Orleans", "name": "Saints", "conf": "NFC", "division": "South", "previousYearRank": 4  },
+      { "city": "New York", "name": "Giants", "conf": "NFC", "division": "East", "previousYearRank": 4  },
+      { "city": "New York", "name": "Jets", "conf": "AFC", "division": "East", "previousYearRank": 3  },
+      { "city": "Philadelphia", "name": "Eagles", "conf": "NFC", "division": "East", "previousYearRank": 1  },
+      { "city": "Pittsburgh", "name": "Steelers", "conf": "AFC", "division": "North", "previousYearRank": 2  },
+      { "city": "San Francisco", "name": "49ers", "conf": "NFC", "division": "West", "previousYearRank": 4  },
+      { "city": "Seattle", "name": "Seahawks", "conf": "NFC", "division": "West", "previousYearRank": 2  },
+      { "city": "Tampa Bay", "name": "Buccaneers", "conf": "NFC", "division": "South", "previousYearRank": 1  },
+      { "city": "Tennessee", "name": "Titans", "conf": "AFC", "division": "South", "previousYearRank": 4  },
+      { "city": "Washington", "name": "Commanders", "conf": "NFC", "division": "East", "previousYearRank": 2  }
+    ]
+  }
+  

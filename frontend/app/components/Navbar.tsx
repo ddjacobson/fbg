@@ -1,15 +1,21 @@
 import Link from "next/link"
 import { Button } from "@/app/ui/button"
+import { useLeagueStore } from "../store/leagueStore"
 
-const navItems = [
-  { name: "Home", href: "/" },
-  { name: "Roster", href: "/roster" },
-  { name: "Draft", href: "/draft" },
-  { name: "Stats", href: "/stats" },
-  { name: "Schedule", href: "/schedule" },
-]
 
-export default function Navbar() {
+
+export default function Navbar(  ) {
+  const userTeam = useLeagueStore().userTeam
+  // console.log("userTeam", userTeam)
+
+  const navItems = [
+    { name: "Home", href: "/league/home/" + userTeam?.name.toLowerCase() },
+    { name: "Roster", href: "/league/roster/"+ userTeam?.name.toLowerCase() },
+    { name: "Teams", href: "/league/teams/"+ userTeam?.name.toLowerCase() },
+    { name: "Stats", href: "/league/stats/"},
+    { name: "Schedule", href: "/schedule/" + userTeam?.name.toLowerCase() },
+  ]
+
   return (
     <nav className="bg-red-600 text-white p-4">
       <div className="container mx-auto flex items-center">
@@ -27,6 +33,7 @@ export default function Navbar() {
             ))}
           </ul>
         </div>
+
       </div>
     </nav>
   )
