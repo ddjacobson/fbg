@@ -20,7 +20,7 @@ import com.ddj.fbg.model.Team;
 @Service
 public class ScheduleGeneratorService {
     
-    private static final int TOTAL_WEEKS = 18;
+    private static final int TOTAL_WEEKS = 17;
     private static final int BYE_WEEK_MIN = 4;
     private static final int BYE_WEEK_MAX = 14;
     private static final int currentYear = 2024; // TODO: change to league year
@@ -63,7 +63,7 @@ public class ScheduleGeneratorService {
         for (int week = 1; week <= TOTAL_WEEKS; week++) {
             weeklySchedule.put(week, new ArrayList<>());
         }
-        
+
         // IMPROVED SCHEDULING APPROACH: Graph coloring algorithm
         System.out.println("\nUsing constraint-based scheduling to ensure proper distribution:");
         
@@ -237,12 +237,12 @@ public class ScheduleGeneratorService {
                 }
             }
             
-            if (gamesScheduled != 17) {
+            if (gamesScheduled != 16) {
                 System.err.println("ERROR: " + team.getName() + " has " + gamesScheduled + 
-                                  " games scheduled. Should have exactly 17.");
+                                  " games scheduled. Should have exactly 16.");
             }
         }
-        
+
         return weeklySchedule;
     }
 
@@ -264,15 +264,15 @@ public class ScheduleGeneratorService {
         for (Team team : teams) {
             // Get 4 intra-conference opponents from the division in rotation
             List<Team> intraConferenceOpponents = getIntraConferenceOpponents(team);
-            
+
             // Get 4 inter-conference opponents from the paired division
             List<Team> interConferenceOpponents = getInterConferenceOpponents(team);
-            
+
             // Combined other conference matchups
             List<Team> otherOpponents = new ArrayList<>();
             otherOpponents.addAll(intraConferenceOpponents);
             otherOpponents.addAll(interConferenceOpponents);
-            
+
             for (Team opponent : otherOpponents) {
                 String key = createMatchupKey(team, opponent);
                 
@@ -286,10 +286,10 @@ public class ScheduleGeneratorService {
                         new Game(opponent, team, -1, currentYear));
                     
                     scheduledMatchups.add(key);
-                }   
+                }
             }
         }
-        
+
         // 3. Add the 17th game - based on conference standings from previous year
         for (Team team : teams) {
             if (team.getConf().equals("AFC")) {
@@ -326,13 +326,13 @@ public class ScheduleGeneratorService {
         List<Game> uniqueGames = deduplicateGames(allMatchups);
         
         System.out.println("uniqueGames length: " + uniqueGames.size());
-        
+
         // Verify each team has exactly 17 games
         verifyScheduleCompleteness(uniqueGames);
-        
+
         return uniqueGames;
     }
-
+    
     private String createMatchupKey(Team team1, Team team2) {
         // Alphabetical sorting ensures consistent key regardless of home/away
         String[] names = {team1.getName(), team2.getName()};
@@ -696,9 +696,9 @@ public class ScheduleGeneratorService {
         // Verify counts
         for (Team team : teams) {
             int gameCount = gameCountByTeam.get(team);
-            if (gameCount != 17) {
+            if (gameCount != 16) {
                 System.err.println("Warning: " + team.getName() + " has " + gameCount + 
-                                  " games scheduled. Should have exactly 17.");
+                                  " games scheduled. Should have exactly 16.");
             }
         }
     }
