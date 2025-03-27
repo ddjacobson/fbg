@@ -2,6 +2,8 @@
 import { TeamSchedule } from "@/app/components/TeamSchedule"
 import { useEffect, useState } from "react"
 import { useLeagueStore } from "@/app/store/leagueStore"
+import Image from "next/image"
+import { getTeamLogo } from "@/app/constants/nfl"
 
 import React from "react"
 
@@ -22,13 +24,13 @@ export default function Page({ params }: { params: Promise<{ team: string }>; })
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              {/* <Image
-                src={team.name || "/placeholder.svg"}
-                alt={`${team.name} Logo`}
+              <Image
+                src={getTeamLogo(currTeam.name)}
+                alt={`${currTeam.name} Logo`}
                 width={100}
                 height={100}
-                className="rounded-full"
-              /> */}
+                className="rounded-full object-contain"
+              />
               <div>
                 <h1 className="text-4xl font-bold">{currTeam.city} {currTeam.name}</h1>
                 <p className="text-xl">Record: {currTeam.wins }-{currTeam.losses}</p>
@@ -41,7 +43,7 @@ export default function Page({ params }: { params: Promise<{ team: string }>; })
           </div>
     
           <h2 className="mb-4 text-2xl font-semibold">Team Schedule</h2>
-          <TeamSchedule teamName={currTeam.name}  />
+          <TeamSchedule teamName={currTeam.name} />
     
           <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-lg border p-6 shadow-sm">

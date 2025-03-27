@@ -13,7 +13,7 @@ export default function Navbar(  ) {
     { name: "Roster", href: "/league/roster/"+ userTeam?.name.toLowerCase() },
     { name: "Teams", href: "/league/teams/"+ userTeam?.name.toLowerCase() },
     { name: "Stats", href: "/league/stats/"},
-    { name: "Schedule", href: "/schedule/" + userTeam?.name.toLowerCase() },
+    { name: "Schedule", href: "/league/schedule/" },
   ]
 
   return (

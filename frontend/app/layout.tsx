@@ -27,7 +27,7 @@ export default function RootLayout({
 
         <main>{children}</main>
 
-        <footer className="bg-gray-200 text-center p-4 mt-8">
+        <footer className="bg-gray-200 text-center p-4 mt-">
           <div className="container mx-auto">
             <p>&copy; {new Date().getFullYear()} NFL Sim by Dane Jacobson. All rights reserved.</p>
           </div>

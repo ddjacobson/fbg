@@ -1,0 +1,21 @@
+export interface Player {
+    playerId?: string,
+    teamId?: string,
+    leagueId?: string,
+    name: string,
+    position: string,
+    jerseyNo: number,
+    speedRtg: number,
+    strengthRtg: number,
+    agilityRtg: number,
+    accelerationRtg: number,
+    injuryRtg: number,
+    jumpingRtg: number,
+    age: number,
+    height?: number,
+    weight?: number,
+    college: string
+    exp: string,
+    headshotUrl: string,
+    teamName: string,
+}

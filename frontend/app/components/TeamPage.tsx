@@ -19,6 +19,7 @@ export function TeamPage() {
     teamId: "",
     ties: 0,
     userTeam: false,
+    previousYearRank: 1,
     wins: 0,
   };
 
@@ -27,6 +28,7 @@ export function TeamPage() {
     leagueKey: "",
     year: 0,
     week: 0,
+    leagueId: ""
   };
 
   const [team, setTeam] = useState<Team>(emptyTeam);

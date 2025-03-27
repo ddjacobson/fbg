@@ -3,15 +3,16 @@
 import { useState } from "react"
 import { ClubIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
-
+import { useLeagueStore } from "@/app/store/leagueStore"
 
 export default function CreateLoadLeague() {
   const [activeTab, setActiveTab] = useState("load")
   const [leagueKey, setLeagueKey] = useState("")
   const [newLeagueName, setNewLeagueName] = useState("")
   const [newLeagueKey, setNewLeagueKey] = useState("")
-  const [league, setLeague] = useState([]);
+  const { teams, setTeams, setUserTeam, setLeague, setSchedule, setRoster } = useLeagueStore();
 
+  
   const router = useRouter()
 
   const handleLoadLeague = async () => {
@@ -44,8 +45,15 @@ export default function CreateLoadLeague() {
       }
 
       const league = await response.json()
-      setLeague(league)
+      console.log("League created:", league)
+
+      // Save the league to local storage
       localStorage.setItem("world", JSON.stringify(league))
+      
+      setTeams(league.teams)
+      setSchedule(league.schedule)
+      setRoster(league.roster)
+
       router.push(`/select-team`);
 
   }

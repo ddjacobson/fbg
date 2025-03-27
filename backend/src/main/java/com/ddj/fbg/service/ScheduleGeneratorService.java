@@ -40,8 +40,8 @@ public class ScheduleGeneratorService {
         // Generate all possible matchups according to NFL rules
         List<Game> allGames = generateAllMatchups();
         
-        // Verify we have exactly the right number of games (272 for NFL)
-        int expectedGames = (teams.size() * 17) / 2; // Each team plays 17 games, divided by 2 because each game counts for 2 teams
+        // Verify we have exactly the right number of games (256 for NFL)
+        int expectedGames = (teams.size() * 16) / 2; // Each team plays 16 games, divided by 2 because each game counts for 2 teams
         System.out.println("Generated " + allGames.size() + " games, expecting " + expectedGames);
         
         if (allGames.size() != expectedGames) {
@@ -358,18 +358,56 @@ public class ScheduleGeneratorService {
 
     private Map<Team, Integer> assignByeWeeks() {
         Map<Team, Integer> byeWeeks = new HashMap<>();
+        Map<Integer, Integer> weekCount = new HashMap<>();
         List<Integer> availableWeeks = new ArrayList<>();
         
+        // Initialize available weeks and week counts
         for (int i = BYE_WEEK_MIN; i <= BYE_WEEK_MAX; i++) {
             availableWeeks.add(i);
+            weekCount.put(i, 0);
         }
         Collections.shuffle(availableWeeks);
         
-        int index = 0;
-        for (Team team : teams) {
-            if (index >= availableWeeks.size()) index = 0;
-            byeWeeks.put(team, availableWeeks.get(index++));
+        // Determine how many teams should have a bye each week
+        int totalTeams = teams.size();
+        int totalByeWeeks = BYE_WEEK_MAX - BYE_WEEK_MIN + 1;
+        int teamsPerByeWeek = totalTeams / totalByeWeeks;
+        int extraTeams = totalTeams % totalByeWeeks;
+        
+        // If teamsPerByeWeek is odd, we need to adjust to make it even
+        if (teamsPerByeWeek % 2 != 0) {
+            teamsPerByeWeek--;
+            extraTeams += totalByeWeeks;
         }
+        
+        // Distribute extraTeams in pairs across the weeks
+        List<Integer> weeksWithExtraTeams = new ArrayList<>(availableWeeks.subList(0, extraTeams / 2));
+        
+        // Assign team counts to each week
+        for (int week : availableWeeks) {
+            int count = teamsPerByeWeek;
+            if (weeksWithExtraTeams.contains(week)) {
+                count += 2; // Add two teams to this week
+            }
+            weekCount.put(week, count);
+        }
+        
+        // Shuffle the teams to randomize bye week assignments
+        List<Team> shuffledTeams = new ArrayList<>(teams);
+        Collections.shuffle(shuffledTeams);
+        
+        // Assign teams to bye weeks
+        int teamIndex = 0;
+        for (int week : availableWeeks) {
+            int count = weekCount.get(week);
+            for (int i = 0; i < count; i++) {
+                if (teamIndex < shuffledTeams.size()) {
+                    byeWeeks.put(shuffledTeams.get(teamIndex), week);
+                    teamIndex++;
+                }
+            }
+        }
+        
         return byeWeeks;
     }
 
@@ -705,6 +743,9 @@ public class ScheduleGeneratorService {
 
     // Verify that each team plays exactly one game per week (except bye week)
     private void verifyTeamSchedules(Map<Integer, List<Game>> weeklySchedule, Map<Team, Integer> byeWeeks) {
+        // First verify that every bye week has an even number of teams
+        verifyEvenByeWeeks(byeWeeks);
+        
         for (Team team : teams) {
             for (int week = 1; week <= TOTAL_WEEKS; week++) {
                 if (week == byeWeeks.get(team)) {
@@ -724,9 +765,35 @@ public class ScheduleGeneratorService {
             }
         }
     }
+    
+    // Verify that each bye week has an even number of teams
+    private void verifyEvenByeWeeks(Map<Team, Integer> byeWeeks) {
+        Map<Integer, Integer> teamsPerByeWeek = new HashMap<>();
+        
+        // Count teams for each bye week
+        for (int week = BYE_WEEK_MIN; week <= BYE_WEEK_MAX; week++) {
+            teamsPerByeWeek.put(week, 0);
+        }
+        
+        // Count the number of teams in each bye week
+        for (Team team : teams) {
+            int byeWeek = byeWeeks.get(team);
+            teamsPerByeWeek.put(byeWeek, teamsPerByeWeek.get(byeWeek) + 1);
+        }
+        
+        // Verify each bye week has an even number of teams
+        for (int week = BYE_WEEK_MIN; week <= BYE_WEEK_MAX; week++) {
+            int teamsOnBye = teamsPerByeWeek.get(week);
+            if (teamsOnBye % 2 != 0) {
+                System.err.println("Warning: Week " + week + " has " + teamsOnBye + 
+                                  " teams on bye. Should be an even number.");
+            } else {
+                System.out.println("Week " + week + " has " + teamsOnBye + " teams on bye.");
+            }
+        }
+    }
 
     // Generate games between teams in the same conference that had the same divisional finish
-    // but are not in the same division or the division being played in the rotation
     private List<Game> generateSameFinishIntraConferenceGames() {
         List<Game> games = new ArrayList<>();
         Set<String> scheduledMatchups = new HashSet<>();

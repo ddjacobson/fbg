@@ -6,6 +6,7 @@ export interface Team {
     logoUrl: string
     losses: number
     name: string
+    previousYearRank: number
     teamId: string
     ties: number
     userTeam: boolean

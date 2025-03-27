@@ -1,6 +1,7 @@
 package com.ddj.fbg.model;
 
-import org.bson.types.ObjectId;
+import java.util.UUID;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -14,23 +15,35 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Player {
 
     @Id
-    private ObjectId playerId;
+    private String playerId;
 
     @Indexed
-    private ObjectId teamId;
+    private String teamId;
 
-    @Indexed ObjectId leagueId;
+    @Indexed 
+    private String leagueId;
+
 
     private String name;
     private String position;
+    private String teamName;
+    private int jerseyNo;
+    private int speedRtg;
+    private int strengthRtg;
+    private int agilityRtg;
+    private int accelerationRtg;
+    private int injuryRtg;
+    private int jumpingRtg;
     private int age;
-    private int height;
+    private double height;
     private int weight;
     private String college;
     private String exp;
+    
+    private String headshotUrl; 
 
-    public Player(ObjectId playerId, String name, String position, int age, int height, int weight, String college, String exp) {
-        this.playerId = playerId;
+    public Player(String name, String position, int age, double height, int weight, String college, String exp, String logoUrl, String teamName) {
+        this.setPlayerId(UUID.randomUUID().toString());
         this.name = name;
         this.position = position;
         this.age = age;
@@ -39,27 +52,47 @@ public class Player {
         this.college = college;
     }
 
-    public ObjectId getPlayerId() {
+    public Player() {
+        this.setPlayerId(UUID.randomUUID().toString());
+    }
+
+    public String getPlayerId() {
         return playerId;
     }
 
-    public void setPlayerId(ObjectId playerId) {
+    public void setPlayerId(String playerId) {
         this.playerId = playerId;
     }
 
-    public ObjectId getTeamId() {
+    public String getHeadshotUrl() {
+        return headshotUrl;
+    }
+
+    public void setHeadshotUrl(String headshotUrl) {
+        this.headshotUrl = headshotUrl;
+    }
+
+    public String getTeamId() {
         return teamId;
     }
 
-    public void setTeamId(ObjectId teamId) {
+    public void setTeamId(String teamId) {
         this.teamId = teamId;
     }
 
-    public ObjectId getLeagueId() {
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public String getLeagueId() {
         return leagueId;
     }
 
-    public void setLeagueId(ObjectId leagueId) {
+    public void setLeagueId(String leagueId) {
         this.leagueId = leagueId;
     }
 
@@ -87,11 +120,11 @@ public class Player {
         this.age = age;
     }
 
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
@@ -117,5 +150,61 @@ public class Player {
 
     public void setExp(String exp) {
         this.exp = exp;
+    }
+
+    public int getJerseyNo() {
+        return jerseyNo;
+    }
+    
+    public void setJerseyNo(int jerseyNo) {
+        this.jerseyNo = jerseyNo;
+    }
+    
+    public int getSpeedRtg() {
+        return speedRtg;
+    }
+    
+    public void setSpeedRtg(int speedRtg) {
+        this.speedRtg = speedRtg;
+    }
+    
+    public int getStrengthRtg() {
+        return strengthRtg;
+    }
+    
+    public void setStrengthRtg(int strengthRtg) {
+        this.strengthRtg = strengthRtg;
+    }
+    
+    public int getAgilityRtg() {
+        return agilityRtg;
+    }
+    
+    public void setAgilityRtg(int agilityRtg) {
+        this.agilityRtg = agilityRtg;
+    }
+    
+    public int getAccelerationRtg() {
+        return accelerationRtg;
+    }
+    
+    public void setAccelerationRtg(int accelerationRtg) {
+        this.accelerationRtg = accelerationRtg;
+    }
+    
+    public int getInjuryRtg() {
+        return injuryRtg;
+    }
+    
+    public void setInjuryRtg(int injuryRtg) {
+        this.injuryRtg = injuryRtg;
+    }
+    
+    public int getJumpingRtg() {
+        return jumpingRtg;
+    }
+    
+    public void setJumpingRtg(int jumpingRtg) {
+        this.jumpingRtg = jumpingRtg;
     }
 }
