@@ -3,6 +3,9 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/ui/select"
+import { ScrollArea } from "@/app/ui/scroll-area"
+import Image from "next/image"
+import { getTeamLogo } from "@/app/constants/nfl"
 
 export default function TeamSelector() {
   const router = useRouter()
@@ -58,11 +61,22 @@ export default function TeamSelector() {
           <SelectValue placeholder="Select a team" />
         </SelectTrigger>
         <SelectContent>
-          {nflTeams.map((team) => (
-            <SelectItem key={team.slug} value={team.slug}>
-              {team.name}
-            </SelectItem>
-          ))}
+          <ScrollArea className="h-72 rounded-md">
+            {nflTeams.map((team) => (
+              <SelectItem key={team.slug} value={team.slug}>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={getTeamLogo(team.slug)}
+                    alt={`${team.name} logo`}
+                    width={24}
+                    height={24}
+                    className="w-6 h-6 object-contain"
+                  />
+                  <span>{team.name}</span>
+                </div>
+              </SelectItem>
+            ))}
+          </ScrollArea>
         </SelectContent>
       </Select>
     </div>

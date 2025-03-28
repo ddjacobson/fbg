@@ -101,7 +101,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-60 bg-gray-100 flex flex-col h-full">
+    <aside className="w-60 bg-gray-100 flex flex-col h-full shadow-inner border-r border-gray-200 sticky top-16">
       <div className="p-4 flex-grow overflow-hidden flex flex-col">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold">Week {viewingWeek}</h2>

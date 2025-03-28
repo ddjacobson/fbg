@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/app/ui/button"
 import { useLeagueStore } from "../store/leagueStore"
+import { getTeamColor } from "../constants/nfl"
 
 
 
@@ -17,7 +18,14 @@ export default function Navbar(  ) {
   ]
 
   return (
-    <nav className="bg-red-600 text-white p-4">
+    <nav
+      className="text-white p-4 shadow-lg transition-all duration-200 hover:shadow-xl sticky top-0 z-50"
+      style={{
+        background: userTeam
+          ? `linear-gradient(to bottom, ${getTeamColor(userTeam.name)}, ${getTeamColor(userTeam.name)})`
+          : 'linear-gradient(to bottom, #dc2626, #dc2626)'
+      }}
+    >
       <div className="container mx-auto flex items-center">
         <Link href="/" className="text-2xl font-bold mr-8">
           NFL Sim

@@ -14,6 +14,7 @@ import com.ddj.fbg.model.Game;
 import com.ddj.fbg.model.League;
 import com.ddj.fbg.model.Player;
 import com.ddj.fbg.model.Team;
+import com.ddj.fbg.model.stats.SeasonStats;
 import com.ddj.fbg.repository.GameRepository;
 import com.ddj.fbg.repository.LeagueRepository;
 import com.ddj.fbg.repository.PlayerRepository;
@@ -139,6 +140,16 @@ public class LeagueAdminService {
                 player.setWeight(weight);
                 player.setHeight(height);
                 player.setHeadshotUrl(headshotUrl);
+
+                // similarly, load player stats and save to stats collection
+                // SeasonStats seasonStats = new SeasonStats(
+                //     player.getPlayerId(), 
+                //     player.getTeamId(), // teamId will be set later when assigned to a team
+                //     league.getLeagueId(), 
+                //      current season
+                //     0, // games played will be updated later
+                //     new java.util.HashMap<>() // initialize empty stats
+                // );
 
                 // Save the player to the database (if PlayerRepository is available)
                 roster.add(player);

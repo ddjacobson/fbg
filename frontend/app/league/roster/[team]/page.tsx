@@ -11,6 +11,7 @@ import { Player } from "@/app/types/player"
 import TeamSelector from "@/app/components/TeamSelector"
 import { PlayerDetailsDialog } from "@/app/components/dialogs/PlayerDetailsDialog"
 import { getTeamLogo } from "@/app/constants/nfl"
+import { inchesToFeet } from "@/app/lib/utils"
 
 type SortKey = keyof Player
 
@@ -21,15 +22,33 @@ export default function RosterPage({params}: {params: Promise<{team: string}>;})
 
   const team = React.use(params).team
   const roster = useLeagueStore().roster
-
-  const players = roster.filter((player) => {
-    var name = player.teamName.split(" ")
-    var teamName = name[name.length - 1].toLowerCase()
-    return teamName === team
-  });
-
-  const [sortKey, setSortKey] = useState<SortKey>("name")
+  const [sortKey, setSortKey] = useState<SortKey>("overall")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
+
+  const players = roster
+    .filter((player) => {
+      var name = player.teamName.split(" ")
+      var teamName = name[name.length - 1].toLowerCase()
+      return teamName === team
+    })
+    .sort((a, b) => {
+      const aValue = a[sortKey]
+      const bValue = b[sortKey]
+      
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortOrder === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue)
+      }
+      
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortOrder === 'asc'
+          ? aValue - bValue
+          : bValue - aValue
+      }
+      
+      return 0
+    });
 
   const sortPlayers = (key: SortKey) => {
     const newSortOrder = key === sortKey && sortOrder === "asc" ? "desc" : "asc"
@@ -40,6 +59,12 @@ export default function RosterPage({params}: {params: Promise<{team: string}>;})
   const openPlayerDialog = (player: Player) => {
     setSelectedPlayer(player)
     setDialogOpen(true)
+  }
+
+  const releasePlayer = (playerId: string) => {
+    console.log(`Releasing player ${playerId}`)
+    // TODO: Implement backend integration
+    alert(`Player ${playerId} released (mock)`)
   }
 
   return (
@@ -67,29 +92,34 @@ export default function RosterPage({params}: {params: Promise<{team: string}>;})
           <Table>
             <TableHeader className="sticky top-0 bg-white">
               <TableRow>
-                <TableHead>
-                  <Button variant="ghost" onClick={() => sortPlayers("name")}>
-                    Name <ArrowUpDown className="ml-2 h-4 w-4" />
+                <TableHead className="w-[50px] px-2">
+                  <Button variant="ghost" onClick={() => sortPlayers("jerseyNo")} className="px-0">
+                    # <ArrowUpDown className="ml-1 h-3 w-3" />
                   </Button>
                 </TableHead>
-                <TableHead>
-                  <Button variant="ghost" onClick={() => sortPlayers("position")}>
-                    Position <ArrowUpDown className="ml-2 h-4 w-4" />
+                <TableHead className="px-2">
+                  <Button variant="ghost" onClick={() => sortPlayers("name")} className="px-0">
+                    Name <ArrowUpDown className="ml-1 h-3 w-3" />
                   </Button>
                 </TableHead>
-                <TableHead>
-                  <Button variant="ghost" onClick={() => sortPlayers("height")}>
-                    Height<ArrowUpDown className="ml-2 h-4 w-4" />
+                <TableHead className="px-2">
+                  <Button variant="ghost" onClick={() => sortPlayers("position")} className="px-0">
+                    Position <ArrowUpDown className="ml-1 h-3 w-3" />
                   </Button>
                 </TableHead>
-                <TableHead>
-                  <Button variant="ghost" onClick={() => sortPlayers("weight")}>
-                    Weight<ArrowUpDown className="ml-2 h-4 w-4" />
+                <TableHead className="px-2">
+                  <Button variant="ghost" onClick={() => sortPlayers("height")} className="px-0">
+                    Height <ArrowUpDown className="ml-1 h-3 w-3" />
                   </Button>
                 </TableHead>
-                <TableHead>
-                  <Button variant="ghost" onClick={() => sortPlayers("speedRtg")}>
-                    Speed <ArrowUpDown className="ml-2 h-4 w-4" />
+                <TableHead className="px-2">
+                  <Button variant="ghost" onClick={() => sortPlayers("weight")} className="px-0">
+                    Weight <ArrowUpDown className="ml-1 h-3 w-3" />
+                  </Button>
+                </TableHead>
+                <TableHead className="px-2">
+                  <Button variant="ghost" onClick={() => sortPlayers("speedRtg")} className="px-0">
+                    Speed <ArrowUpDown className="ml-1 h-3 w-3" />
                   </Button>
                 </TableHead>
               </TableRow>
@@ -97,18 +127,29 @@ export default function RosterPage({params}: {params: Promise<{team: string}>;})
             <TableBody>
               {players.map((player) => (
                 <TableRow key={player.name}>
-                  <TableCell>                    
+                  <TableCell className="px-2 py-1">#{player.jerseyNo || "-"}</TableCell>
+                  <TableCell className="px-2 py-1">
+                    <div className="flex items-center gap-2 h-full">
                     <button
-                      onClick={() => openPlayerDialog(player)}
-                      className="text-left hover:underline focus:outline-none focus:ring-2 focus:ring-primary rounded px-1"
-                    >
-                     <b> {player.name} </b> 
-                    </button>
+                        onClick={() => releasePlayer(player.playerId || '')}
+                        className="text-red-500 hover:text-red-700 transition-colors"
+                        title="Release player"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => openPlayerDialog(player)}
+                        className="text-left hover:underline focus:outline-none focus:ring-2 focus:ring-primary rounded"
+                      >
+                        <b>{player.name}</b>
+                      </button>
+
+                    </div>
                   </TableCell>
-                  <TableCell>{player.position}</TableCell>
-                  <TableCell>{player.height}</TableCell>
-                  <TableCell>{player.weight}</TableCell>
-                  <TableCell>{player.speedRtg}</TableCell>
+                  <TableCell className="px-2 py-2">{player.position}</TableCell>
+                  <TableCell className="px-2 py-2">{player.height ? inchesToFeet(player.height) : "-"}</TableCell>
+                  <TableCell className="px-2 py-2">{player.weight}</TableCell>
+                  <TableCell className="px-2 py-2">{player.speedRtg}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
