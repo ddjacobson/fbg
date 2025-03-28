@@ -10,6 +10,7 @@ import com.ddj.fbg.response.CreateLeagueResponseObject;
 import com.ddj.fbg.service.LeagueAdminService;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,11 +34,12 @@ public class CreateLeagueController {
         return responseObject;
     }
 
-    @GetMapping("/load-league")
-    public League loadLeague(@RequestBody LeagueCreateRequest request) {
-        System.out.println("Loading League with key: " + request.getLeagueKey());
+    @PostMapping("/load-league")
+    public CreateLeagueResponseObject loadLeague(@RequestBody LeagueCreateRequest leagueKey) {
+        System.out.println("Loading League with key: " + leagueKey.getLeagueKey());
+        CreateLeagueResponseObject league = leagueAdminService.loadLeague(leagueKey.getLeagueKey());
+        return league;
         // Handle league loading logic here
-        return leagueAdminService.loadLeague(request.getLeagueKey());
     }
 
     @GetMapping("/api/get-teams")
@@ -48,6 +50,7 @@ public class CreateLeagueController {
 
     private League populateLeague(String leagueName, String leagueKey) {
         League l = new League();
+        l.setLeagueId(UUID.randomUUID().toString());
         l.setLeagueName(leagueName);
         l.setLeagueKey(leagueKey);
         l.setWeek("1");

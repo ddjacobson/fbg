@@ -16,6 +16,8 @@ import com.ddj.fbg.model.Player;
 import com.ddj.fbg.model.Team;
 import com.ddj.fbg.repository.GameRepository;
 import com.ddj.fbg.repository.LeagueRepository;
+import com.ddj.fbg.repository.PlayerRepository;
+import com.ddj.fbg.repository.TeamRepository;
 import com.ddj.fbg.response.CreateLeagueResponseObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,19 +35,45 @@ public class LeagueAdminService {
     @Autowired
     private ScheduleGeneratorService generator;
 
-    // @Autowired
-    // private TeamRepository teamRepository;
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
     public CreateLeagueResponseObject createLeague(League league) {
+        
         leagueRepository.save(league);
-
         CreateLeagueResponseObject response = populateLeague(league);
 
         return response;
     }
 
-    public League loadLeague(String leagueKey) {
-        return leagueRepository.findByLeagueKey(leagueKey);
+    public CreateLeagueResponseObject loadLeague(String leagueKey) {
+        League league = leagueRepository.findByLeagueKey(leagueKey);
+
+        if (league == null) {
+            return null;
+        }
+
+        List<Team> teams = teamRepository.findByLeagueId(league.getLeagueId());
+
+        if (teams == null || teams.size() == 0) {
+            return null;
+        }
+
+        List<Player> players = playerRepository.findByLeagueId(league.getLeagueId());
+
+        if (players == null || players.size() == 0) {
+            return null;
+        }
+
+        System.out.println("Loading League with key: " + league.getLeagueName());
+        System.out.println(players.size() + " players found");
+
+        CreateLeagueResponseObject response = new CreateLeagueResponseObject(teams, league, null, players);
+
+        return response;
     }
 
     private CreateLeagueResponseObject populateLeague(League league) {
@@ -54,6 +82,7 @@ public class LeagueAdminService {
 
         // generate schedule and write to db
         Map<Integer, List<Game>> schedule = generator.generateWeeklySchedule(teams);
+
 
         // generate players and write to db
         List<Player> roster = loadPlayers(league);
@@ -93,7 +122,9 @@ public class LeagueAdminService {
 
                 // Create a Player object
                 Player player = new Player();
+                player.setPlayerId(UUID.randomUUID().toString());
                 player.setName(name);
+                player.setLeagueId(league.getLeagueId());
                 player.setPosition(position);
                 player.setJerseyNo(jerseyNo);
                 player.setSpeedRtg(speedRtg);
@@ -103,7 +134,6 @@ public class LeagueAdminService {
                 player.setInjuryRtg(injuryRtg);
                 player.setJumpingRtg(jumpingRtg);
                 player.setTeamName(teamName); 
-                player.setLeagueId(league.getLeagueId());
                 player.setCollege(school);
                 player.setHeadshotUrl(school);
                 player.setWeight(weight);
@@ -112,7 +142,7 @@ public class LeagueAdminService {
 
                 // Save the player to the database (if PlayerRepository is available)
                 roster.add(player);
-                // playerRepository.save(player);
+                playerRepository.save(player);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -159,18 +189,26 @@ public class LeagueAdminService {
                 Team t = new Team();
                 t.setTeamId(UUID.randomUUID().toString());
                 t.setLeagueId(league.getLeagueId());
+                t.setLeagueId(league.getLeagueId());
                 t.setCity(city);
                 t.setName(name);
                 t.setConf(conf);
                 t.setDivision(division);
                 t.setPreviousYearRank(prevYearRnk);
                 teams.add(t);
-                // teamRepository.save(t);
+                teamRepository.save(t);
         }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return teams;
+    }
+
+
+    public void setUserTeam(String userTeamId) {
+        Team userTeam = teamRepository.findByTeamId(userTeamId);
+        userTeam.setUserTeam(true);
+        teamRepository.save(userTeam);
     }
 
 }

@@ -21,7 +21,17 @@ export default function TeamsPage() {
     // Update the league with the selected team
     setUserTeam(team);
 
-    router.push(`/league/home/${team.name.toLowerCase()}`);  
+    const response = await fetch("http://localhost:8080/set-user-team", { 
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ teamId: team.teamId,}),
+    })
+
+    if (response.ok) {
+      router.push(`/league/home/${team.name.toLowerCase()}`);  
+    }
   }
   
   useEffect(() => {
@@ -29,7 +39,6 @@ export default function TeamsPage() {
     const leagueResponse = storedTeams ? JSON.parse(storedTeams) : [];
     setTeams(leagueResponse.teams);
     setLeague(leagueResponse.league);
-    console.log("League response:", leagueResponse)
     setSchedule(leagueResponse.schedule)
 
   }, [])

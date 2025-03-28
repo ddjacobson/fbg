@@ -23,7 +23,6 @@ public class Player {
     @Indexed 
     private String leagueId;
 
-
     private String name;
     private String position;
     private String teamName;
